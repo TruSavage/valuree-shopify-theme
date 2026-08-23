@@ -422,29 +422,102 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const rankDates = () => {
-    const scored = dateIdeas
+  const maxBudget = coupleBudget();
+  const maxHours = coupleTime();
+
+  const getSharedPlace = () => {
+    if (state.you.place === state.partner.place) {
+      return state.you.place;
+    }
+
+    if (state.you.place === 'Either') {
+      return state.partner.place;
+    }
+
+    if (state.partner.place === 'Either') {
+      return state.you.place;
+    }
+
+    return 'Either';
+  };
+
+  const sharedPlace = getSharedPlace();
+
+  // HARD FILTERS:
+  // A normal recommendation must respect budget, time and location.
+  const eligibleDates = dateIdeas.filter((idea) => {
+    const budgetFits = idea.budget <= maxBudget;
+    const timeFits = idea.hours <= maxHours;
+
+    let locationFits = true;
+
+    if (sharedPlace === 'Stay In') {
+      locationFits =
+        idea.place === 'Stay In' ||
+        idea.place === 'Either';
+    }
+
+    if (sharedPlace === 'Go Out') {
+      locationFits =
+        idea.place === 'Go Out' ||
+        idea.place === 'Either';
+    }
+
+    // When one wants Stay In and the other wants Go Out,
+    // only naturally flexible dates qualify as normal results.
+    if (sharedPlace === 'Either' && hasLocationConflict()) {
+      locationFits = idea.place === 'Either';
+    }
+
+    return budgetFits && timeFits && locationFits;
+  });
+
+  // Once a date passes the hard rules, mood decides ranking.
+  rankedDates = eligibleDates
+    .map((idea) => ({
+      ...idea,
+      matchScore: scoreDate(idea)
+    }))
+    .sort((a, b) => b.matchScore - a.matchScore);
+
+  /*
+    Safety fallback:
+    If the library genuinely has no normal date satisfying all
+    constraints, use the closest options instead of showing nothing.
+    The compromise date will still remain the top recommendation
+    whenever the couple has a major conflict.
+  */
+  if (!rankedDates.length) {
+    rankedDates = dateIdeas
+      .filter((idea) =>
+        idea.budget <= maxBudget &&
+        idea.hours <= maxHours
+      )
       .map((idea) => ({
         ...idea,
         matchScore: scoreDate(idea)
       }))
       .sort((a, b) => b.matchScore - a.matchScore);
+  }
 
-    // Only prioritize genuinely reasonable recommendations.
-    rankedDates = scored.filter((idea) => idea.matchScore > 0);
+  if (!rankedDates.length) {
+    rankedDates = dateIdeas
+      .map((idea) => ({
+        ...idea,
+        matchScore: scoreDate(idea)
+      }))
+      .sort((a, b) => b.matchScore - a.matchScore);
+  }
 
-    if (!rankedDates.length) {
-      rankedDates = scored;
-    }
+  if (needsCompromiseDate()) {
+    rankedDates.unshift({
+      ...buildCompromiseDate(),
+      matchScore: 999
+    });
+  }
 
-    if (needsCompromiseDate()) {
-      rankedDates.unshift({
-        ...buildCompromiseDate(),
-        matchScore: 999
-      });
-    }
-
-    currentDateIndex = 0;
-  };
+  currentDateIndex = 0;
+};
 
   const renderMatch = () => {
     const compatibility = compatibilityScore();
