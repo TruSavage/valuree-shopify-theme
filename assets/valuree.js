@@ -367,51 +367,174 @@ document.addEventListener('DOMContentLoaded', () => {
     hasLocationConflict() || hasMajorBudgetConflict();
 
   const buildCompromiseDate = () => {
-    const budget = coupleBudget();
-    const hours = coupleTime();
+  const budget = coupleBudget();
+  const hours = coupleTime();
 
-    const flexibleCost =
-      budget === 0 ? '$0' :
-      budget <= 25 ? '$0 – $25' :
-      budget <= 50 ? '$10 – $50' :
-      '$25 – $75';
+  const yourMood = state.you.mood;
+  const partnerMood = state.partner.mood;
+  const yourPlace = state.you.place;
+  const partnerPlace = state.partner.place;
 
-    return {
-      title: 'The Best of Both Worlds',
-      moods: [state.you.mood, state.partner.mood],
-      budget,
-      place: 'Either',
-      hours,
-      cost: flexibleCost,
-      duration:
-        hours <= 1 ? '1 HOUR' :
-        hours <= 3 ? '2–3 HOURS' :
-        hours <= 5 ? 'HALF DAY' :
-        'ALL DAY',
-      location: 'START IN → GO OUT',
-      isCompromise: true,
-      steps: [
-        [
-          '7:00 PM',
-          'Start Their Way',
-          state.you.place === 'Stay In' || state.partner.place === 'Stay In'
-            ? 'Begin at home with a drink, dessert, music or a quick meal.'
-            : 'Start somewhere casual that feels comfortable for both of you.'
-        ],
-        [
-          '8:00 PM',
-          'Switch It Up',
-          'Move into something different: a walk, free local spot, photo challenge or spontaneous destination.'
-        ],
-        [
-          '9:00 PM',
-          'Choose Together',
-          'Finish with something you both agree on — dessert, music, a scenic stop or time talking together.'
-        ]
+  const locationConflict = yourPlace !== partnerPlace;
+  const moodConflict = yourMood !== partnerMood;
+  const budgetConflict = hasMajorBudgetConflict();
+
+  const flexibleCost =
+    budget === 0 ? '$0' :
+    budget <= 25 ? '$0 – $25' :
+    budget <= 50 ? '$10 – $50' :
+    '$25 – $75';
+
+  const duration =
+    hours <= 1 ? '1 HOUR' :
+    hours <= 3 ? '2–3 HOURS' :
+    hours <= 5 ? 'HALF DAY' :
+    'ALL DAY';
+
+  // Decide what kind of compromise this couple needs most.
+  let title = 'The Best of Both Worlds';
+  let location = 'FLEXIBLE';
+  let compromiseType = 'COMPROMISE MATCH';
+  let steps = [];
+
+  // STAY IN vs GO OUT
+  if (locationConflict) {
+    title = 'Start Cozy, End Out';
+    location = 'START IN → GO OUT';
+    compromiseType = 'HYBRID NIGHT';
+
+    steps = [
+      [
+        '7:00 PM',
+        'Start Cozy',
+        'Begin at home with a drink, snack, music, game, or something relaxing.'
+      ],
+      [
+        '8:00 PM',
+        'Switch It Up',
+        'Head out for a walk, dessert, coffee, a free local spot, or a spontaneous mini adventure.'
+      ],
+      [
+        '9:00 PM',
+        'Choose Together',
+        'Finish with something you both agree on and make the last part of the date yours.'
       ]
-    };
-  };
+    ];
+  }
 
+  // BIG BUDGET DIFFERENCE
+  if (budgetConflict && !locationConflict) {
+    title = 'The Budget Bridge';
+    location = yourPlace || partnerPlace || 'FLEXIBLE';
+    compromiseType = 'BUDGET COMPROMISE';
+
+    steps = [
+      [
+        '7:00 PM',
+        'Start Free',
+        'Begin with something completely free so neither person has to compromise on cost immediately.'
+      ],
+      [
+        '8:00 PM',
+        'Optional Upgrade',
+        'Add one paid activity, snack, dessert, or experience only if you both want to.'
+      ],
+      [
+        '9:00 PM',
+        'Finish Your Way',
+        'End with a free or inexpensive activity you can enjoy together.'
+      ]
+    ];
+  }
+
+  // DIFFERENT MOODS
+  if (moodConflict && !locationConflict && !budgetConflict) {
+    title = `${yourMood} Meets ${partnerMood}`;
+    location = yourPlace === partnerPlace ? yourPlace : 'FLEXIBLE';
+    compromiseType = 'VIBE COMPROMISE';
+
+    steps = [
+      [
+        '7:00 PM',
+        `${yourMood} Pick`,
+        `Start with something inspired by the ${yourMood.toLowerCase()} mood.`
+      ],
+      [
+        '8:00 PM',
+        `${partnerMood} Pick`,
+        `Switch gears with something inspired by the ${partnerMood.toLowerCase()} mood.`
+      ],
+      [
+        '9:00 PM',
+        'Your Shared Finale',
+        'Finish with something you both choose together.'
+      ]
+    ];
+  }
+
+  // MULTIPLE MAJOR CONFLICTS
+  if (
+    (locationConflict && budgetConflict) ||
+    (locationConflict && moodConflict && budgetConflict)
+  ) {
+    title = 'The Best of Both Worlds';
+    location = 'START IN → GO OUT';
+    compromiseType = 'ULTIMATE COMPROMISE';
+
+    steps = [
+      [
+        '7:00 PM',
+        'Start Their Way',
+        'Begin with the easiest low-cost option that matches one person’s preferred vibe.'
+      ],
+      [
+        '8:00 PM',
+        'Switch Sides',
+        'Change the setting or activity so the other person gets something they wanted too.'
+      ],
+      [
+        '9:00 PM',
+        'Meet in the Middle',
+        'Finish with something you both agree on — dessert, music, a scenic stop, a game, or quality time.'
+      ]
+    ];
+  }
+
+  // Fallback
+  if (!steps.length) {
+    steps = [
+      [
+        '7:00 PM',
+        'Start Together',
+        'Pick an easy activity that feels comfortable for both of you.'
+      ],
+      [
+        '8:00 PM',
+        'Try Something Different',
+        'Add one activity that gives the date a little variety.'
+      ],
+      [
+        '9:00 PM',
+        'Finish Together',
+        'End with something you both enjoy.'
+      ]
+    ];
+  }
+
+  return {
+    title,
+    moods: [yourMood, partnerMood],
+    budget,
+    place: location,
+    hours,
+    cost: flexibleCost,
+    duration,
+    location,
+    isCompromise: true,
+    compromiseType,
+    steps
+  };
+};
   const readStartingSelections = () => {
     document
       .querySelectorAll('.your-card .question-block')
