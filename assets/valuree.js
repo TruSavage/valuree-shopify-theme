@@ -1,0 +1,1 @@
+document.addEventListener('click',e=>{if(e.target.matches('.opts button')){[...e.target.parentElement.children].forEach(b=>b.classList.remove('active','active2'));e.target.classList.add(e.target.closest('.purple')?'active2':'active')}});
