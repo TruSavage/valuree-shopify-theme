@@ -379,11 +379,33 @@ document.addEventListener('DOMContentLoaded', () => {
   const moodConflict = yourMood !== partnerMood;
   const budgetConflict = hasMajorBudgetConflict();
 
-  const flexibleCost =
-    budget === 0 ? '$0' :
-    budget <= 25 ? '$0 – $25' :
-    budget <= 50 ? '$10 – $50' :
-    '$25 – $75';
+  const yourBudgetValue = budgetValues[state.you.budget];
+const partnerBudgetValue = budgetValues[state.partner.budget];
+
+const lowBudget = Math.min(yourBudgetValue, partnerBudgetValue);
+const highBudget = Math.max(yourBudgetValue, partnerBudgetValue);
+
+let flexibleCost;
+
+if (lowBudget === highBudget) {
+  flexibleCost =
+    lowBudget === 0 ? '$0' :
+    lowBudget <= 25 ? '$0 – $25' :
+    lowBudget <= 50 ? '$25 – $50' :
+    '$50 – $100+';
+} else if (lowBudget === 0 && highBudget >= 100) {
+  flexibleCost = '$0 – $25';
+} else if (lowBudget === 0 && highBudget >= 50) {
+  flexibleCost = '$0 – $25';
+} else if (lowBudget === 0) {
+  flexibleCost = '$0 – $15';
+} else if (lowBudget <= 25 && highBudget >= 100) {
+  flexibleCost = '$15 – $40';
+} else if (lowBudget <= 25 && highBudget >= 50) {
+  flexibleCost = '$15 – $35';
+} else {
+  flexibleCost = '$25 – $50';
+}
 
   const duration =
     hours <= 1 ? '1 HOUR' :
