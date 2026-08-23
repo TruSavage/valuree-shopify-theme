@@ -1,7 +1,479 @@
-<section class="hero"><nav><div class="brand">♡<strong>VALURÉE</strong><small>DATE NIGHT, PERFECTED.</small></div><div class="links"><a href="#how">How It Works</a><a href="#generator">Date Ideas</a><a href="#collections">Collections</a><a href="#generator">Surprise Me</a><a href="#about">About</a></div><a class="pill" href="#generator">♡ START TOGETHER</a></nav><div class="hero-copy"><h1>WHAT ARE WE<br><em>doing tonight?</em></h1><p>Two people. One amazing date.<br><b>Let Valurée decide.</b></p><a class="cta" href="#generator">START TOGETHER →</a><small>🔒 Each of you answers privately</small></div></section>
-<section id="generator" class="grid"><div class="card"><h2>① YOUR TURN</h2><p>Answer a few quick questions<br>These are private</p><h3>What’s your mood?</h3><div class="opts"><button>♡ Romantic</button><button>☺ Fun</button><button>△ Adventurous</button><button>☁ Relaxed</button><button>✦ Spontaneous</button></div><h3>What’s your budget?</h3><div class="opts four"><button>$0</button><button class="active">$25</button><button>$50</button><button>$100+</button></div><h3>Stay in or go out?</h3><div class="opts three"><button>⌂ Stay In</button><button class="active">▣ Go Out</button><button>? Either</button></div><h3>How much time?</h3><div class="opts four"><button>1 Hour</button><button class="active">2–3 Hours</button><button>Half Day</button><button>All Day</button></div><button class="wide pink">NEXT: YOUR PARTNER →</button></div>
-<div class="card purple"><h2>② YOUR PARTNER’S TURN</h2><p>Their answers are private too</p><h3>What’s their mood?</h3><div class="opts"><button>♡ Romantic</button><button>☺ Fun</button><button class="active2">△ Adventurous</button><button>☁ Relaxed</button><button>✦ Spontaneous</button></div><h3>What’s their budget?</h3><div class="opts four"><button>$0</button><button>$25</button><button class="active2">$50</button><button>$100+</button></div><h3>Stay in or go out?</h3><div class="opts three"><button>⌂ Stay In</button><button class="active2">▣ Go Out</button><button>? Either</button></div><h3>How much time?</h3><div class="opts four"><button>1 Hour</button><button class="active2">2–3 Hours</button><button>Half Day</button><button>All Day</button></div><button class="wide violet">SEE OUR MATCH →</button></div>
-<div class="card match"><h2>③ YOUR MATCH</h2><p>Here’s how you both line up</p><div class="heart"><strong>87%</strong><span>DATE MATCH</span></div><div class="scores"><p>Romantic <b>85% ━━━━━</b> 70%</p><p>Adventure <b>60% ━━━━━</b> 85%</p><p>Fun <b>75% ━━━━━</b> 65%</p><p>Relaxed <b>80% ━━━━━</b> 75%</p></div><div class="vibe">♡ <b>ROMANTIC + ADVENTUROUS</b><small>OUTDOORS · MEANINGFUL · A LITTLE SPONTANEOUS</small></div></div>
-<div class="card date"><h2>④ YOUR VALURÉE DATE</h2><p>We created this just for you</p><div class="datepic"><h2>THE MIDNIGHT<br>SWEET ESCAPE</h2><small>Romantic · Adventurous · Outdoors</small></div><div class="facts"><b>BUDGET<br>$20–$30</b><b>TIME<br>2.5 HOURS</b><b>LOCATION<br>OUTDOORS</b></div><ol><li>7:00 PM — Sunset Walk</li><li>8:00 PM — Grab a Sweet Treat</li><li>8:30 PM — Question Game</li><li>9:00 PM — Our Song Moment</li></ol><div class="actions"><button>↻ TRY ANOTHER</button><button>♡ SAVE DATE</button><button>⌁ SHARE</button></div></div></section>
-<section id="collections" class="collections"><b>♡ BROWSE OUR COLLECTIONS</b><span>UNDER $25</span><span>⌂ AT HOME</span><span>♡ ROMANTIC</span><span>△ ADVENTUROUS</span><span>☂ RAINY DAY</span><span>◷ LAST MINUTE</span><span>🎁 ANNIVERSARY</span><span>♧ DOUBLE DATES</span></section>
-{% schema %}{"name":"Valurée Home","settings":[],"presets":[{"name":"Valurée Home"}]}{% endschema %}
+<section class="valuree-home">
+
+  <header class="hero-nav">
+    <div class="brand-block">
+      <div class="brand-heart">♡</div>
+      <div>
+        <div class="brand-name">VALURÉE</div>
+        <div class="brand-tagline">DATE NIGHT, PERFECTED.</div>
+      </div>
+    </div>
+
+    <nav class="hero-links">
+      <a href="#how-it-works">How It Works</a>
+      <a href="#date-ideas">Date Ideas</a>
+      <a href="#collections">Collections</a>
+      <a href="#generator">Surprise Me</a>
+      <a href="#about">About</a>
+    </nav>
+
+    <a href="#generator" class="top-start-button">
+      ♡ START TOGETHER
+    </a>
+  </header>
+
+
+  <section class="hero-main">
+    <div class="hero-side hero-side-left">
+      <div class="portrait-placeholder woman-portrait">
+        <span>♡</span>
+      </div>
+    </div>
+
+    <div class="hero-center">
+      <h1>
+        <span class="hero-main-title">WHAT ARE WE</span>
+        <span class="hero-script-title">doing tonight?</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Two people. One amazing date.<br>
+        <strong>Let Valurée decide.</strong>
+      </p>
+
+      <a href="#generator" class="hero-start-button">
+        START TOGETHER <span>→</span>
+      </a>
+
+      <p class="privacy-note">
+        🔒 Each of you answers privately
+      </p>
+    </div>
+
+    <div class="hero-side hero-side-right">
+      <div class="portrait-placeholder man-portrait">
+        <span>♡</span>
+      </div>
+    </div>
+  </section>
+
+
+  <section id="generator" class="generator-grid">
+
+    <article class="generator-card your-card">
+      <div class="card-heading">
+        <span class="step-number">1</span>
+
+        <div>
+          <h2>YOUR TURN</h2>
+          <p>
+            Answer a few quick questions<br>
+            <strong>These are private</strong>
+          </p>
+        </div>
+      </div>
+
+
+      <div class="question-block">
+        <h3>What's your mood?</h3>
+
+        <div class="option-grid five">
+          <button class="choice active">
+            <span>♥</span>
+            Romantic
+          </button>
+
+          <button class="choice">
+            <span>☺</span>
+            Fun
+          </button>
+
+          <button class="choice">
+            <span>△</span>
+            Adventurous
+          </button>
+
+          <button class="choice">
+            <span>☁</span>
+            Relaxed
+          </button>
+
+          <button class="choice">
+            <span>✦</span>
+            Spontaneous
+          </button>
+        </div>
+      </div>
+
+
+      <div class="question-block">
+        <h3>What's your budget?</h3>
+
+        <div class="option-grid four">
+          <button class="choice">$0</button>
+          <button class="choice active">$25</button>
+          <button class="choice">$50</button>
+          <button class="choice">$100+</button>
+        </div>
+      </div>
+
+
+      <div class="question-block">
+        <h3>Stay in or go out?</h3>
+
+        <div class="option-grid three">
+          <button class="choice">⌂ Stay In</button>
+          <button class="choice active">▣ Go Out</button>
+          <button class="choice">? Either</button>
+        </div>
+      </div>
+
+
+      <div class="question-block">
+        <h3>How much time?</h3>
+
+        <div class="option-grid four">
+          <button class="choice">1 Hour</button>
+          <button class="choice active">2–3 Hours</button>
+          <button class="choice">Half Day</button>
+          <button class="choice">All Day</button>
+        </div>
+      </div>
+
+
+      <button class="card-action pink-action">
+        NEXT: YOUR PARTNER →
+      </button>
+    </article>
+
+
+    <article class="generator-card partner-card">
+      <div class="card-heading">
+        <span class="step-number purple-step">2</span>
+
+        <div>
+          <h2>YOUR PARTNER'S TURN</h2>
+          <p>Their answers are private too</p>
+        </div>
+      </div>
+
+
+      <div class="question-block">
+        <h3>What's their mood?</h3>
+
+        <div class="option-grid five">
+          <button class="choice">
+            <span>♡</span>
+            Romantic
+          </button>
+
+          <button class="choice">
+            <span>☺</span>
+            Fun
+          </button>
+
+          <button class="choice purple-active">
+            <span>△</span>
+            Adventurous
+          </button>
+
+          <button class="choice">
+            <span>☁</span>
+            Relaxed
+          </button>
+
+          <button class="choice">
+            <span>✦</span>
+            Spontaneous
+          </button>
+        </div>
+      </div>
+
+
+      <div class="question-block">
+        <h3>What's their budget?</h3>
+
+        <div class="option-grid four">
+          <button class="choice">$0</button>
+          <button class="choice">$25</button>
+          <button class="choice purple-active">$50</button>
+          <button class="choice">$100+</button>
+        </div>
+      </div>
+
+
+      <div class="question-block">
+        <h3>Stay in or go out?</h3>
+
+        <div class="option-grid three">
+          <button class="choice">⌂ Stay In</button>
+          <button class="choice purple-active">▣ Go Out</button>
+          <button class="choice">? Either</button>
+        </div>
+      </div>
+
+
+      <div class="question-block">
+        <h3>How much time?</h3>
+
+        <div class="option-grid four">
+          <button class="choice">1 Hour</button>
+          <button class="choice purple-active">2–3 Hours</button>
+          <button class="choice">Half Day</button>
+          <button class="choice">All Day</button>
+        </div>
+      </div>
+
+
+      <button class="card-action purple-action">
+        SEE OUR MATCH →
+      </button>
+    </article>
+
+
+    <article class="generator-card match-card">
+      <div class="card-heading">
+        <span class="step-number match-step">3</span>
+
+        <div>
+          <h2>YOUR MATCH</h2>
+          <p>Here's how you both line up</p>
+        </div>
+      </div>
+
+
+      <div class="match-heart">
+        <div class="match-score">87%</div>
+        <div class="match-label">DATE MATCH</div>
+        <div class="tiny-heart">♡</div>
+      </div>
+
+
+      <div class="match-bars">
+
+        <div class="match-row">
+          <span>Romantic</span>
+          <strong>85%</strong>
+          <div class="bar">
+            <span style="width:85%"></span>
+          </div>
+          <small>70%</small>
+        </div>
+
+        <div class="match-row">
+          <span>Adventure</span>
+          <strong>60%</strong>
+          <div class="bar">
+            <span style="width:85%"></span>
+          </div>
+          <small>85%</small>
+        </div>
+
+        <div class="match-row">
+          <span>Fun</span>
+          <strong>75%</strong>
+          <div class="bar">
+            <span style="width:65%"></span>
+          </div>
+          <small>65%</small>
+        </div>
+
+        <div class="match-row">
+          <span>Relaxed</span>
+          <strong>80%</strong>
+          <div class="bar">
+            <span style="width:75%"></span>
+          </div>
+          <small>75%</small>
+        </div>
+
+        <div class="match-row">
+          <span>Spontaneous</span>
+          <strong>55%</strong>
+          <div class="bar">
+            <span style="width:60%"></span>
+          </div>
+          <small>60%</small>
+        </div>
+
+      </div>
+
+
+      <div class="shared-vibe">
+        <span>♡</span>
+
+        <div>
+          <small>YOUR SHARED VIBE</small>
+          <strong>ROMANTIC + ADVENTUROUS</strong>
+          <p>OUTDOORS · MEANINGFUL · A LITTLE SPONTANEOUS</p>
+        </div>
+      </div>
+    </article>
+
+
+    <article class="generator-card date-card">
+      <div class="card-heading">
+        <span class="step-number date-step">4</span>
+
+        <div>
+          <h2>YOUR VALURÉE DATE</h2>
+          <p>We created this just for you</p>
+        </div>
+      </div>
+
+
+      <div class="date-feature-image">
+        <div class="date-image-overlay">
+          <h3>
+            THE MIDNIGHT<br>
+            SWEET ESCAPE
+          </h3>
+
+          <p>Romantic · Adventurous · Outdoors</p>
+        </div>
+      </div>
+
+
+      <div class="date-details">
+        <div>
+          <small>BUDGET</small>
+          <strong>$20 – $30</strong>
+        </div>
+
+        <div>
+          <small>TIME</small>
+          <strong>2.5 HOURS</strong>
+        </div>
+
+        <div>
+          <small>LOCATION</small>
+          <strong>OUTDOORS</strong>
+        </div>
+      </div>
+
+
+      <div class="date-timeline">
+
+        <div class="timeline-item">
+          <span>7:00 PM</span>
+
+          <div>
+            <strong>Sunset Walk</strong>
+            <p>Take a scenic walk and enjoy the view together.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <span>8:00 PM</span>
+
+          <div>
+            <strong>Grab a Sweet Treat</strong>
+            <p>Pick up dessert from a local spot you love.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <span>8:30 PM</span>
+
+          <div>
+            <strong>Question Game</strong>
+            <p>Play our “5 Questions for Us” card game.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <span>9:00 PM</span>
+
+          <div>
+            <strong>Our Song Moment</strong>
+            <p>Each pick a song that reminds you of each other.</p>
+          </div>
+        </div>
+
+      </div>
+
+
+      <div class="date-buttons">
+        <button>↻ TRY ANOTHER</button>
+        <button>♡ SAVE DATE</button>
+        <button>➤ SHARE</button>
+      </div>
+    </article>
+
+  </section>
+
+
+  <section id="collections" class="collections-strip">
+
+    <div class="collections-intro">
+      <span>♡</span>
+
+      <div>
+        <strong>BROWSE OUR COLLECTIONS</strong>
+        <small>More ways to find your perfect night</small>
+      </div>
+    </div>
+
+    <a href="#" class="collection-item">＄<span>UNDER $25</span></a>
+    <a href="#" class="collection-item">⌂<span>AT HOME</span></a>
+    <a href="#" class="collection-item">♡<span>ROMANTIC</span></a>
+    <a href="#" class="collection-item">△<span>ADVENTUROUS</span></a>
+    <a href="#" class="collection-item">☂<span>RAINY DAY</span></a>
+    <a href="#" class="collection-item">◷<span>LAST MINUTE</span></a>
+    <a href="#" class="collection-item">🎁<span>ANNIVERSARY</span></a>
+    <a href="#" class="collection-item">♧<span>DOUBLE DATES</span></a>
+
+  </section>
+
+
+  <section id="how-it-works" class="how-section">
+    <p class="section-kicker">HOW IT WORKS</p>
+
+    <h2>
+      Your date night.<br>
+      <span>Chosen together.</span>
+    </h2>
+
+    <div class="how-grid">
+
+      <article>
+        <span>01</span>
+        <h3>Create your couple</h3>
+        <p>Start your Valurée experience and invite your partner with a private code or link.</p>
+      </article>
+
+      <article>
+        <span>02</span>
+        <h3>Answer separately</h3>
+        <p>Both people choose their mood, budget, location and preferences privately.</p>
+      </article>
+
+      <article>
+        <span>03</span>
+        <h3>See your match</h3>
+        <p>Valurée compares both answers and finds the strongest overlap between you.</p>
+      </article>
+
+      <article>
+        <span>04</span>
+        <h3>Get your date</h3>
+        <p>Receive a personalized plan you can save, share or replace with another match.</p>
+      </article>
+
+    </div>
+  </section>
+
+</section>
+
+
+{% schema %}
+{
+  "name": "Valurée Home",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Valurée Home"
+    }
+  ]
+}
+{% endschema %}
