@@ -583,16 +583,44 @@ document.addEventListener('DOMContentLoaded', () => {
     const label = button.textContent.toLowerCase();
 
     if (label.includes('try another')) {
-      button.addEventListener('click', () => {
-        if (!rankedDates.length) generateResults();
+  button.addEventListener('click', () => {
+    if (!rankedDates.length) generateResults();
 
-        currentDateIndex =
-          (currentDateIndex + 1) % rankedDates.length;
+    const currentIdea = rankedDates[currentDateIndex];
 
-        renderDate();
-        toast('Another matching date ✦');
-      });
+    const getBaseId = (idea) => {
+      if (!idea?.id) return idea?.title || '';
+
+      const parts = idea.id.split('-');
+
+      return parts.length >= 3
+        ? `${parts[0]}-${parts[1]}`
+        : idea.id;
+    };
+
+    const currentBaseId = getBaseId(currentIdea);
+
+    let nextIndex = currentDateIndex;
+
+    for (let i = 1; i <= rankedDates.length; i++) {
+      const candidateIndex =
+        (currentDateIndex + i) % rankedDates.length;
+
+      const candidate = rankedDates[candidateIndex];
+
+      if (getBaseId(candidate) !== currentBaseId) {
+        nextIndex = candidateIndex;
+        break;
+      }
     }
+
+    currentDateIndex = nextIndex;
+
+    renderDate();
+
+    toast('Another matching date ✦');
+  });
+}
 
     if (label.includes('save date')) {
       button.addEventListener('click', () => {
