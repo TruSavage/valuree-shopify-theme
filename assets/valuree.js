@@ -479,31 +479,29 @@ let recentCategories = [];
   // HARD FILTERS:
   // A normal recommendation must respect budget, time and location.
   const eligibleDates = dateIdeas.filter((idea) => {
-    const budgetFits = idea.budget <= maxBudget;
-    const timeFits = idea.hours <= maxHours;
+  const budgetFits = idea.budget <= maxBudget;
+  const timeFits = idea.hours <= maxHours;
 
-    let locationFits = true;
+  let locationFits = true;
 
-    if (sharedPlace === 'Stay In') {
-      locationFits =
-        idea.place === 'Stay In' ||
-        idea.place === 'Either';
-    }
+  if (sharedPlace === 'Stay In') {
+    locationFits =
+      idea.place === 'Stay In' ||
+      idea.place === 'Either';
+  }
 
-    if (sharedPlace === 'Go Out') {
-      locationFits =
-        idea.place === 'Go Out' ||
-        idea.place === 'Either';
-    }
+  if (sharedPlace === 'Go Out') {
+    locationFits =
+      idea.place === 'Go Out' ||
+      idea.place === 'Either';
+  }
 
-    // When one wants Stay In and the other wants Go Out,
-    // only naturally flexible dates qualify as normal results.
-    if (sharedPlace === 'Either' && hasLocationConflict()) {
-      locationFits = idea.place === 'Either';
-    }
+  if (sharedPlace === 'Either' && hasLocationConflict()) {
+    locationFits = idea.place === 'Either';
+  }
 
-    return budgetFits && timeFits && locationFits;
-  });
+  return budgetFits && timeFits && locationFits;
+});
 
   // Once a date passes the hard rules, mood decides ranking.
   rankedDates = eligibleDates
@@ -521,33 +519,65 @@ let recentCategories = [];
     whenever the couple has a major conflict.
   */
   if (!rankedDates.length) {
-    rankedDates = dateIdeas
-      .filter((idea) =>
-        idea.budget <= maxBudget &&
-        idea.hours <= maxHours
-      )
-      .map((idea) => ({
-        ...idea,
-        matchScore: scoreDate(idea)
-      }))
-      .sort((a, b) => b.matchScore - a.matchScore);
-  }
+  rankedDates = dateIdeas
+    .filter((idea) =>
+      idea.budget <= maxBudget &&
+      idea.hours <= maxHours
+    )
+    .map((idea) => ({
+      ...idea,
+      matchScore: scoreDate(idea)
+    }))
+    .sort((a, b) => b.matchScore - a.matchScore);
+}
 
   if (!rankedDates.length) {
-    rankedDates = dateIdeas
-      .map((idea) => ({
-        ...idea,
-        matchScore: scoreDate(idea)
-      }))
-      .sort((a, b) => b.matchScore - a.matchScore);
-  }
+  rankedDates = dateIdeas
+    .filter((idea) => {
+      const budgetFits = idea.budget <= maxBudget;
+      const timeFits = idea.hours <= maxHours;
+
+      let locationFits = true;
+
+      if (sharedPlace === 'Stay In') {
+        locationFits =
+          idea.place === 'Stay In' ||
+          idea.place === 'Either';
+      }
+
+      if (sharedPlace === 'Go Out') {
+        locationFits =
+          idea.place === 'Go Out' ||
+          idea.place === 'Either';
+      }
+
+      if (sharedPlace === 'Either' && hasLocationConflict()) {
+        locationFits = idea.place === 'Either';
+      }
+
+      return budgetFits && timeFits && locationFits;
+    })
+    .map((idea) => ({
+      ...idea,
+      matchScore: scoreDate(idea)
+    }))
+    .sort((a, b) => b.matchScore - a.matchScore);
+}
 
   if (needsCompromiseDate()) {
+  const compromise = buildCompromiseDate();
+
+  const compromiseFits =
+    compromise.budget <= maxBudget &&
+    compromise.hours <= maxHours;
+
+  if (compromiseFits) {
     rankedDates.unshift({
-      ...buildCompromiseDate(),
+      ...compromise,
       matchScore: 999
     });
   }
+}
 
   currentDateIndex = 0;
 };
