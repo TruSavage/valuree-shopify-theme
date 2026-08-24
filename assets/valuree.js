@@ -733,32 +733,12 @@ let recentCategories = [];
       }
     }
 
-    /*
-      If there aren't enough eligible concepts to maintain
-      a full 10-date cooldown, release the oldest concept
-      one at a time rather than resetting everything.
-    */
-    while (
-      !candidates.length &&
-      recentBaseIds.length > 1
-    ) {
-      recentBaseIds.shift();
-
-      candidates = rankedDates
-        .map((idea, index) => ({
-          idea,
-          index,
-          baseId: getBaseId(idea)
-        }))
-        .filter(({ baseId }) =>
-          baseId &&
-          !recentBaseIds.includes(baseId)
-        );
-    }
+    
 
     if (!candidates.length) {
-      return;
-    }
+  toast('You’ve seen every matching date in this rotation ♡');
+  return;
+}
 
     const next = candidates[0];
 
