@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let rankedDates = [];
   let shownDateIds = [];
+  let recentBaseIds = [];
 let recentCategories = [];
   let currentDateIndex = 0;
 
@@ -672,12 +673,20 @@ let recentCategories = [];
     };
 
     const currentIdea = rankedDates[currentDateIndex];
-
     const currentBaseId = getBaseId(currentIdea);
     const currentCategory = currentIdea?.category || '';
 
-    if (currentIdea?.id && !shownDateIds.includes(currentIdea.id)) {
-      shownDateIds.push(currentIdea.id);
+    // Record the concept currently being shown.
+    if (
+      currentBaseId &&
+      !recentBaseIds.includes(currentBaseId)
+    ) {
+      recentBaseIds.push(currentBaseId);
+    }
+
+    // Keep only the last 10 unique concepts on cooldown.
+    if (recentBaseIds.length > 10) {
+      recentBaseIds.shift();
     }
 
     if (currentCategory) {
@@ -691,28 +700,25 @@ let recentCategories = [];
     let candidates = rankedDates
       .map((idea, index) => ({
         idea,
-        index
+        index,
+        baseId: getBaseId(idea)
       }))
-      .filter(({ idea }) => {
-        const unseen =
-          !idea?.id || !shownDateIds.includes(idea.id);
-
-        const differentBase =
-          getBaseId(idea) !== currentBaseId;
-
-        return unseen && differentBase;
-      });
-
-    // Prefer a category that has NOT appeared recently.
-    const freshCategoryCandidates = candidates.filter(({ idea }) => {
-      const category = idea?.category || '';
-
-      return (
-        category &&
-        category !== currentCategory &&
-        !recentCategories.includes(category)
+      .filter(({ baseId }) =>
+        baseId &&
+        !recentBaseIds.includes(baseId)
       );
-    });
+
+    // Prefer a category that hasn't appeared recently.
+    const freshCategoryCandidates =
+      candidates.filter(({ idea }) => {
+        const category = idea?.category || '';
+
+        return (
+          category &&
+          category !== currentCategory &&
+          !recentCategories.includes(category)
+        );
+      });
 
     if (freshCategoryCandidates.length) {
       candidates = freshCategoryCandidates;
@@ -727,149 +733,54 @@ let recentCategories = [];
       }
     }
 
-    // If every eligible result has already been shown,
-    // reset the session history and start a fresh rotation.
-    if (!candidates.length) {
-      shownDateIds = currentIdea?.id
-        ? [currentIdea.id]
-        : [];
-
-      recentCategories = currentCategory
-        ? [currentCategory]
-        : [];
+    /*
+      If there aren't enough eligible concepts to maintain
+      a full 10-date cooldown, release the oldest concept
+      one at a time rather than resetting everything.
+    */
+    while (
+      !candidates.length &&
+      recentBaseIds.length > 1
+    ) {
+      recentBaseIds.shift();
 
       candidates = rankedDates
         .map((idea, index) => ({
           idea,
-          index
+          index,
+          baseId: getBaseId(idea)
         }))
-        .filter(({ idea }) =>
-          getBaseId(idea) !== currentBaseId
+        .filter(({ baseId }) =>
+          baseId &&
+          !recentBaseIds.includes(baseId)
         );
     }
 
-    if (candidates.length) {
-      const next = candidates[0];
+    if (!candidates.length) {
+      return;
+    }
 
-      currentDateIndex = next.index;
+    const next = candidates[0];
 
-      if (
-        next.idea?.id &&
-        !shownDateIds.includes(next.idea.id)
-      ) {
-        shownDateIds.push(next.idea.id);
-      }
+    currentDateIndex = next.index;
+
+    if (
+      next.baseId &&
+      !recentBaseIds.includes(next.baseId)
+    ) {
+      recentBaseIds.push(next.baseId);
+    }
+
+    if (recentBaseIds.length > 10) {
+      recentBaseIds.shift();
     }
 
     renderDate();
 
     toast('A fresh date idea ✦');
   });
-} {
-  button.addEventListener('click', () => {
-    if (!rankedDates.length) generateResults();
-
-    const currentIdea = rankedDates[currentDateIndex];
-
-    const getBaseId = (idea) => {
-      if (!idea?.id) return idea?.title || '';
-
-      const parts = idea.id.split('-');
-
-      return parts.length >= 3
-        ? `${parts[0]}-${parts[1]}`
-        : idea.id;
-    };
-
-    const currentBaseId = getBaseId(currentIdea);
-    const currentCategory = currentIdea?.category || '';
-
-    let nextIndex = currentDateIndex;
-
-    // First priority:
-    // choose a different base concept AND a different category.
-    for (let i = 1; i <= rankedDates.length; i++) {
-      const candidateIndex =
-        (currentDateIndex + i) % rankedDates.length;
-
-      const candidate = rankedDates[candidateIndex];
-
-      const differentBase =
-        getBaseId(candidate) !== currentBaseId;
-
-      const differentCategory =
-        (candidate?.category || '') !== currentCategory;
-
-      if (differentBase && differentCategory) {
-        nextIndex = candidateIndex;
-        break;
-      }
-    }
-
-    // Fallback:
-    // if no different category is available,
-    // at least choose a different base date.
-    if (nextIndex === currentDateIndex) {
-      for (let i = 1; i <= rankedDates.length; i++) {
-        const candidateIndex =
-          (currentDateIndex + i) % rankedDates.length;
-
-        const candidate = rankedDates[candidateIndex];
-
-        if (getBaseId(candidate) !== currentBaseId) {
-          nextIndex = candidateIndex;
-          break;
-        }
-      }
-    }
-
-    currentDateIndex = nextIndex;
-
-    renderDate();
-
-    toast('A different kind of date ✦');
-  });
-} {
-  button.addEventListener('click', () => {
-    if (!rankedDates.length) generateResults();
-
-    const currentIdea = rankedDates[currentDateIndex];
-
-    const getBaseId = (idea) => {
-      if (!idea?.id) return idea?.title || '';
-
-      const parts = idea.id.split('-');
-
-      return parts.length >= 3
-        ? `${parts[0]}-${parts[1]}`
-        : idea.id;
-    };
-
-    const currentBaseId = getBaseId(currentIdea);
-
-    let nextIndex = currentDateIndex;
-
-    for (let i = 1; i <= rankedDates.length; i++) {
-      const candidateIndex =
-        (currentDateIndex + i) % rankedDates.length;
-
-      const candidate = rankedDates[candidateIndex];
-
-      if (getBaseId(candidate) !== currentBaseId) {
-        nextIndex = candidateIndex;
-        break;
-      }
-    }
-
-    currentDateIndex = nextIndex;
-
-    renderDate();
-
-    toast('Another matching date ✦');
-  });
 }
-
-    if (label.includes('save date')) {
+if (label.includes('save date')) {
       button.addEventListener('click', () => {
         if (!rankedDates.length) generateResults();
 
@@ -897,8 +808,7 @@ let recentCategories = [];
 
         toast('♡ Date saved');
       });
-    }
-
+}
     if (label.includes('share')) {
       button.addEventListener('click', async () => {
         if (!rankedDates.length) generateResults();
