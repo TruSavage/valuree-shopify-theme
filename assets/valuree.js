@@ -676,17 +676,12 @@ let recentCategories = [];
     const currentBaseId = getBaseId(currentIdea);
     const currentCategory = currentIdea?.category || '';
 
-    // Record the concept currently being shown.
+    // Record the current concept as seen.
     if (
       currentBaseId &&
       !recentBaseIds.includes(currentBaseId)
     ) {
       recentBaseIds.push(currentBaseId);
-    }
-
-    // Keep only the last 10 unique concepts on cooldown.
-    if (recentBaseIds.length > 10) {
-      recentBaseIds.shift();
     }
 
     if (currentCategory) {
@@ -697,18 +692,40 @@ let recentCategories = [];
       }
     }
 
-    let candidates = rankedDates
-      .map((idea, index) => ({
-        idea,
-        index,
-        baseId: getBaseId(idea)
-      }))
-      .filter(({ baseId }) =>
-        baseId &&
-        !recentBaseIds.includes(baseId)
-      );
+    const buildCandidates = () =>
+      rankedDates
+        .map((idea, index) => ({
+          idea,
+          index,
+          baseId: getBaseId(idea)
+        }))
+        .filter(({ baseId }) =>
+          baseId &&
+          !recentBaseIds.includes(baseId)
+        );
 
-    // Prefer a category that hasn't appeared recently.
+    let candidates = buildCandidates();
+
+    // If every eligible core concept has been seen,
+    // start a fresh rotation.
+    if (!candidates.length) {
+      recentBaseIds = currentBaseId
+        ? [currentBaseId]
+        : [];
+
+      recentCategories = currentCategory
+        ? [currentCategory]
+        : [];
+
+      candidates = buildCandidates();
+    }
+
+    if (!candidates.length) {
+      toast('No other matching dates are available right now ♡');
+      return;
+    }
+
+    // Prefer categories that haven't appeared recently.
     const freshCategoryCandidates =
       candidates.filter(({ idea }) => {
         const category = idea?.category || '';
@@ -733,13 +750,6 @@ let recentCategories = [];
       }
     }
 
-    
-
-    if (!candidates.length) {
-  toast('You’ve seen every matching date in this rotation ♡');
-  return;
-}
-
     const next = candidates[0];
 
     currentDateIndex = next.index;
@@ -749,10 +759,6 @@ let recentCategories = [];
       !recentBaseIds.includes(next.baseId)
     ) {
       recentBaseIds.push(next.baseId);
-    }
-
-    if (recentBaseIds.length > 10) {
-      recentBaseIds.shift();
     }
 
     renderDate();
