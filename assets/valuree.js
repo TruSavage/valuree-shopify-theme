@@ -672,6 +672,70 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const currentBaseId = getBaseId(currentIdea);
+    const currentCategory = currentIdea?.category || '';
+
+    let nextIndex = currentDateIndex;
+
+    // First priority:
+    // choose a different base concept AND a different category.
+    for (let i = 1; i <= rankedDates.length; i++) {
+      const candidateIndex =
+        (currentDateIndex + i) % rankedDates.length;
+
+      const candidate = rankedDates[candidateIndex];
+
+      const differentBase =
+        getBaseId(candidate) !== currentBaseId;
+
+      const differentCategory =
+        (candidate?.category || '') !== currentCategory;
+
+      if (differentBase && differentCategory) {
+        nextIndex = candidateIndex;
+        break;
+      }
+    }
+
+    // Fallback:
+    // if no different category is available,
+    // at least choose a different base date.
+    if (nextIndex === currentDateIndex) {
+      for (let i = 1; i <= rankedDates.length; i++) {
+        const candidateIndex =
+          (currentDateIndex + i) % rankedDates.length;
+
+        const candidate = rankedDates[candidateIndex];
+
+        if (getBaseId(candidate) !== currentBaseId) {
+          nextIndex = candidateIndex;
+          break;
+        }
+      }
+    }
+
+    currentDateIndex = nextIndex;
+
+    renderDate();
+
+    toast('A different kind of date ✦');
+  });
+} {
+  button.addEventListener('click', () => {
+    if (!rankedDates.length) generateResults();
+
+    const currentIdea = rankedDates[currentDateIndex];
+
+    const getBaseId = (idea) => {
+      if (!idea?.id) return idea?.title || '';
+
+      const parts = idea.id.split('-');
+
+      return parts.length >= 3
+        ? `${parts[0]}-${parts[1]}`
+        : idea.id;
+    };
+
+    const currentBaseId = getBaseId(currentIdea);
 
     let nextIndex = currentDateIndex;
 

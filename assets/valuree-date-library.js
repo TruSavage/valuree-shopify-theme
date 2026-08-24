@@ -377,7 +377,68 @@
     if (budget <= 100) return '$50 – $100';
     return '$75 – $125+';
   };
+const getCategory = (base) => {
+  const title = base.title.toLowerCase();
+  const location = base.location.toLowerCase();
 
+  if (
+    title.includes('coffee') ||
+    title.includes('dessert') ||
+    title.includes('restaurant') ||
+    title.includes('kitchen') ||
+    title.includes('picnic')
+  ) {
+    return 'food';
+  }
+
+  if (
+    title.includes('arcade') ||
+    title.includes('mini golf') ||
+    title.includes('game night')
+  ) {
+    return 'games';
+  }
+
+  if (
+    title.includes('photo') ||
+    title.includes('thrift') ||
+    title.includes('mystery drive') ||
+    title.includes('all-day')
+  ) {
+    return 'adventure';
+  }
+
+  if (
+    title.includes('bookstore') ||
+    title.includes('museum')
+  ) {
+    return 'explore';
+  }
+
+  if (
+    title.includes('creative') ||
+    title.includes('blanket fort')
+  ) {
+    return 'creative';
+  }
+
+  if (
+    title.includes('spa') ||
+    title.includes('cozy') ||
+    title.includes('connection')
+  ) {
+    return 'relax';
+  }
+
+  if (
+    title.includes('sunset') ||
+    location.includes('outdoor')
+  ) {
+    return 'outdoors';
+  }
+
+  return 'experience';
+};
   const library = [];
 
   BASE_DATES.forEach((base, baseIndex) => {
@@ -413,7 +474,7 @@
         duration: formatDuration(adjustedHours),
 
         location: base.location,
-
+category: getCategory(base),
         tags: [
           variation.tag,
           base.place === 'Stay In' ? 'at-home' : 'go-out',
