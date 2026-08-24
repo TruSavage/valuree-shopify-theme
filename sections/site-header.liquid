@@ -2,13 +2,13 @@
   <div class="page-width site-header__inner">
     <a class="wordmark" href="{{ routes.root_url }}" aria-label="{{ shop.name }} home">Valur<span>ée</span></a>
     <nav class="desktop-nav" aria-label="Main navigation">
-      {% for link in section.settings.menu.links %}<a href="{{ link.url }}">{{ link.title }}</a>{% else %}<a href="#how-it-works">How it works</a><a href="#experiences">Date ideas</a><a href="#about">About</a>{% endfor %}
+      {% for link in section.settings.menu.links %}<a href="{{ link.url }}">{{ link.title }}</a>{% else %}<a href="/pages/how-it-works">How it works</a><a href="/pages/membership">Membership</a><a href="/pages/about-valuree">About</a><a href="/pages/faq">FAQ</a>{% endfor %}
     </nav>
     <div class="header-actions"><a class="button button--primary" href="{% if section.settings.cta_link != blank %}{{ section.settings.cta_link }}{% else %}#membership{% endif %}">{{ section.settings.cta_label }}</a></div>
     <button class="menu-toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="MobileMenu" aria-label="Open menu">☰</button>
   </div>
   <nav id="MobileMenu" class="mobile-nav" data-mobile-menu hidden aria-label="Mobile navigation">
-    {% for link in section.settings.menu.links %}<a href="{{ link.url }}">{{ link.title }}</a>{% else %}<a href="#how-it-works">How it works</a><a href="#experiences">Date ideas</a><a href="#about">About</a>{% endfor %}
+    {% for link in section.settings.menu.links %}<a href="{{ link.url }}">{{ link.title }}</a>{% else %}<a href="/pages/how-it-works">How it works</a><a href="/pages/membership">Membership</a><a href="/pages/about-valuree">About</a><a href="/pages/faq">FAQ</a>{% endfor %}
     <a class="button button--primary" href="{% if section.settings.cta_link != blank %}{{ section.settings.cta_link }}{% else %}#membership{% endif %}">{{ section.settings.cta_label }}</a>
   </nav>
 </header>

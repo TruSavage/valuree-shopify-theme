@@ -8,10 +8,12 @@
     {% if page_description %}<meta name="description" content="{{ page_description | escape }}">{% endif %}
     {{ content_for_header }}
     {{ 'valuree-v2.css' | asset_url | stylesheet_tag }}
+    <style>:root{--night:{{ settings.color_background }};--ink:{{ settings.color_text }};--purple:{{ settings.color_accent }};--pink:{{ settings.color_secondary }};}</style>
     <script src="{{ 'valuree-v2.js' | asset_url }}" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#MainContent">Skip to content</a>
+    {% section 'announcement-bar' %}
     {% section 'site-header' %}
     <main id="MainContent" tabindex="-1">{{ content_for_layout }}</main>
     {% section 'site-footer' %}
