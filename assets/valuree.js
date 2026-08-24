@@ -374,56 +374,86 @@ let recentCategories = [];
   };
 
   const scoreDate = (idea) => {
-    let score = 0;
+  let score = 0;
 
-    // Mood is intentionally flexible.
-    if (idea.moods.includes(state.you.mood)) score += 24;
-    if (idea.moods.includes(state.partner.mood)) score += 24;
+  const yourMoodMatch = idea.moods.includes(state.you.mood);
+  const partnerMoodMatch = idea.moods.includes(state.partner.mood);
 
-    if (
-      state.you.mood === state.partner.mood &&
-      idea.moods.includes(state.you.mood)
-    ) {
-      score += 15;
+  // MOOD — strongest signal
+  if (yourMoodMatch) score += 30;
+  if (partnerMoodMatch) score += 30;
+
+  // Strong bonus when both people independently fit the same date
+  if (yourMoodMatch && partnerMoodMatch) {
+    score += 25;
+  }
+
+  // Extra bonus when both selected the exact same mood
+  if (
+    state.you.mood === state.partner.mood &&
+    yourMoodMatch
+  ) {
+    score += 15;
+  }
+
+  // BUDGET
+  const allowedBudget = coupleBudget();
+
+  if (idea.budget <= allowedBudget) {
+    score += 22;
+
+    // Reward dates that use the budget well without exceeding it
+    const budgetGap = allowedBudget - idea.budget;
+
+    if (budgetGap <= 10) {
+      score += 6;
     }
+  } else if (idea.budget <= allowedBudget + 10) {
+    score -= 10;
+  } else {
+    score -= 50;
+  }
 
-    // Never heavily favor something outside the conservative budget.
-    const allowedBudget = coupleBudget();
+  // LOCATION
+  const placeFits = (preference) =>
+    preference === 'Either' ||
+    idea.place === 'Either' ||
+    idea.place === preference;
 
-    if (idea.budget <= allowedBudget) {
-      score += 24;
-    } else if (idea.budget <= allowedBudget + 10) {
-      score += 5;
-    } else {
-      score -= 40;
+  const yourPlaceMatch = placeFits(state.you.place);
+  const partnerPlaceMatch = placeFits(state.partner.place);
+
+  if (yourPlaceMatch) score += 18;
+  else score -= 20;
+
+  if (partnerPlaceMatch) score += 18;
+  else score -= 20;
+
+  // Bonus when location works naturally for both
+  if (yourPlaceMatch && partnerPlaceMatch) {
+    score += 10;
+  }
+
+  // TIME
+  const availableHours = coupleTime();
+
+  if (idea.hours <= availableHours) {
+    score += 22;
+
+    // Prefer dates reasonably close to the time they actually chose
+    const timeGap = availableHours - idea.hours;
+
+    if (timeGap <= 1) {
+      score += 8;
     }
+  } else if (idea.hours <= availableHours + 0.5) {
+    score -= 10;
+  } else {
+    score -= 45;
+  }
 
-    // Location.
-    const placeFits = (preference) =>
-      preference === 'Either' ||
-      idea.place === 'Either' ||
-      idea.place === preference;
-
-    if (placeFits(state.you.place)) score += 16;
-    else score -= 15;
-
-    if (placeFits(state.partner.place)) score += 16;
-    else score -= 15;
-
-    // Available time acts like a real constraint.
-    const availableHours = coupleTime();
-
-    if (idea.hours <= availableHours) {
-      score += 22;
-    } else if (idea.hours <= availableHours + 0.5) {
-      score += 4;
-    } else {
-      score -= 35;
-    }
-
-    return score;
+  return score;
   };
-
   const rankDates = () => {
   const maxBudget = coupleBudget();
   const maxHours = coupleTime();
