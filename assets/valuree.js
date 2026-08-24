@@ -31,6 +31,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const dateIdeas = window.VALUREE_DATE_LIBRARY || [];
 
   let rankedDates = [];
+  let shownDateIds = [];
+let recentCategories = [];
   let currentDateIndex = 0;
 
   const toast = (message) => {
@@ -656,6 +658,114 @@ document.addEventListener('DOMContentLoaded', () => {
     const label = button.textContent.toLowerCase();
 
     if (label.includes('try another')) {
+  button.addEventListener('click', () => {
+    if (!rankedDates.length) generateResults();
+
+    const getBaseId = (idea) => {
+      if (!idea?.id) return idea?.title || '';
+
+      const parts = idea.id.split('-');
+
+      return parts.length >= 3
+        ? `${parts[0]}-${parts[1]}`
+        : idea.id;
+    };
+
+    const currentIdea = rankedDates[currentDateIndex];
+
+    const currentBaseId = getBaseId(currentIdea);
+    const currentCategory = currentIdea?.category || '';
+
+    if (currentIdea?.id && !shownDateIds.includes(currentIdea.id)) {
+      shownDateIds.push(currentIdea.id);
+    }
+
+    if (currentCategory) {
+      recentCategories.push(currentCategory);
+
+      if (recentCategories.length > 3) {
+        recentCategories.shift();
+      }
+    }
+
+    let candidates = rankedDates
+      .map((idea, index) => ({
+        idea,
+        index
+      }))
+      .filter(({ idea }) => {
+        const unseen =
+          !idea?.id || !shownDateIds.includes(idea.id);
+
+        const differentBase =
+          getBaseId(idea) !== currentBaseId;
+
+        return unseen && differentBase;
+      });
+
+    // Prefer a category that has NOT appeared recently.
+    const freshCategoryCandidates = candidates.filter(({ idea }) => {
+      const category = idea?.category || '';
+
+      return (
+        category &&
+        category !== currentCategory &&
+        !recentCategories.includes(category)
+      );
+    });
+
+    if (freshCategoryCandidates.length) {
+      candidates = freshCategoryCandidates;
+    } else {
+      const differentCategoryCandidates =
+        candidates.filter(({ idea }) =>
+          (idea?.category || '') !== currentCategory
+        );
+
+      if (differentCategoryCandidates.length) {
+        candidates = differentCategoryCandidates;
+      }
+    }
+
+    // If every eligible result has already been shown,
+    // reset the session history and start a fresh rotation.
+    if (!candidates.length) {
+      shownDateIds = currentIdea?.id
+        ? [currentIdea.id]
+        : [];
+
+      recentCategories = currentCategory
+        ? [currentCategory]
+        : [];
+
+      candidates = rankedDates
+        .map((idea, index) => ({
+          idea,
+          index
+        }))
+        .filter(({ idea }) =>
+          getBaseId(idea) !== currentBaseId
+        );
+    }
+
+    if (candidates.length) {
+      const next = candidates[0];
+
+      currentDateIndex = next.index;
+
+      if (
+        next.idea?.id &&
+        !shownDateIds.includes(next.idea.id)
+      ) {
+        shownDateIds.push(next.idea.id);
+      }
+    }
+
+    renderDate();
+
+    toast('A fresh date idea ✦');
+  });
+} {
   button.addEventListener('click', () => {
     if (!rankedDates.length) generateResults();
 
