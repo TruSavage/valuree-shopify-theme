@@ -520,19 +520,6 @@ let recentCategories = [];
   */
   if (!rankedDates.length) {
   rankedDates = dateIdeas
-    .filter((idea) =>
-      idea.budget <= maxBudget &&
-      idea.hours <= maxHours
-    )
-    .map((idea) => ({
-      ...idea,
-      matchScore: scoreDate(idea)
-    }))
-    .sort((a, b) => b.matchScore - a.matchScore);
-}
-
-  if (!rankedDates.length) {
-  rankedDates = dateIdeas
     .filter((idea) => {
       const budgetFits = idea.budget <= maxBudget;
       const timeFits = idea.hours <= maxHours;
@@ -567,9 +554,28 @@ let recentCategories = [];
   if (needsCompromiseDate()) {
   const compromise = buildCompromiseDate();
 
-  const compromiseFits =
-    compromise.budget <= maxBudget &&
-    compromise.hours <= maxHours;
+  let compromiseLocationFits = true;
+
+if (sharedPlace === 'Stay In') {
+  compromiseLocationFits =
+    compromise.place === 'Stay In' ||
+    compromise.place === 'Either';
+}
+
+if (sharedPlace === 'Go Out') {
+  compromiseLocationFits =
+    compromise.place === 'Go Out' ||
+    compromise.place === 'Either';
+}
+
+if (sharedPlace === 'Either' && hasLocationConflict()) {
+  compromiseLocationFits = compromise.place === 'Either';
+}
+
+const compromiseFits =
+  compromise.budget <= maxBudget &&
+  compromise.hours <= maxHours &&
+  compromiseLocationFits;
 
   if (compromiseFits) {
     rankedDates.unshift({
